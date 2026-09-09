@@ -19,7 +19,16 @@ public class HelloController {
                 LocalDateTime.now()
         );
     }
+    @GetMapping("/reverse")
+    public ReverseResult reverse(@RequestParam(required = false) String text) {
+        if (text == null || text.isEmpty()) {
+            return new ReverseResult(null, null, "Parameter 'text' is required");
+        }
 
+        String reversed = new StringBuilder(text).reverse().toString();
+
+        return new ReverseResult(text, reversed, null);
+    }
     @GetMapping("/info")
     public Info info() {
         return new Info(
@@ -28,7 +37,11 @@ public class HelloController {
                 Runtime.getRuntime().availableProcessors()
         );
     }
-
+    public record ReverseResult(
+            String original,
+            String reversed,
+            String error
+    ) {}
     public record Greeting(
             String message,
             String owner,
