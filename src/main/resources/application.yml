@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: spring-lab-01
+
+server:
+  port: 8080
+
+app:
+  owner: Есенгелді
+  group: IT1-2411
+
+  mail:
+    from: no-reply@iitu.kz
+    retry-count: 3
+    timeout: 5s
+    enabled: true
+
+logging:
+  level:
+    web: INFO
+    kz.iitu: INFO
+
