@@ -8,6 +8,10 @@ server:
 app:
   owner: Есенгелді
   group: IT1-2411
+  date-pattern: yyyy-MM-dd HH:mm:ss
+
+  aspect:
+    slow-threshold-ms: 200
 
   mail:
     from: no-reply@iitu.kz
