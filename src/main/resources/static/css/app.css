@@ -1,0 +1,43 @@
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin: 32px;
+    background: #f3f6f4;
+    color: #1d2b24;
+}
+
+h1 {
+    color: #1f6f4a;
+}
+
+table {
+    border-collapse: collapse;
+    background: #ffffff;
+    min-width: 560px;
+}
+
+th, td {
+    border: 1px solid #9cb8a8;
+    padding: 8px 14px;
+    text-align: left;
+}
+
+th {
+    background: #1f6f4a;
+    color: #ffffff;
+}
+
+tr:nth-child(even) td {
+    background: #e7f1eb;
+}
+
+.flash {
+    background: #fff4cc;
+    border: 1px solid #e0c35a;
+    padding: 10px 14px;
+    width: fit-content;
+}
+
+.add input, .add button {
+    padding: 6px 10px;
+    margin-right: 6px;
+}
