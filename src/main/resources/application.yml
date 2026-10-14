@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: spring-lab-01
+
+server:
+  port: 8080
+
+app:
+  owner: Есенгелді
+  group: IT1-2411
+  date-pattern: yyyy-MM-dd HH:mm:ss
+
+  aspect:
+    slow-threshold-ms: 200
+
+  mail:
+    from: no-reply@iitu.kz
+    retry-count: 3
+    timeout: 5s
+    enabled: true
+
+logging:
+  level:
+    web: INFO
+    kz.iitu: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,env,configprops,conditions
