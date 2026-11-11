@@ -1,5 +1,6 @@
 package kz.iitu.springlab.catalog;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,6 +50,8 @@ public class BookService {
         return Optional.of(repository.save(new Book(id, book.title(), book.author(), book.year())));
     }
 
+    // lab 10: only an administrator may delete, whichever controller calls this method
+    @PreAuthorize("hasRole('ADMIN')")
     public boolean delete(long id) {
         return repository.deleteById(id);
     }

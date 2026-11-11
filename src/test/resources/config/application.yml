@@ -1,0 +1,5 @@
+# tests: every Spring context gets its own private in-memory database;
+# Flyway still builds the schema from the same migrations
+spring:
+  datasource:
+    url: jdbc:h2:mem:test-${random.uuid};MODE=PostgreSQL

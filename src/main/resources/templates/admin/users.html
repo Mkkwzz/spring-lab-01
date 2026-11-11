@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Administration</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <p class="who">Signed in as <b sec:authentication="name">admin</b>
+        <span sec:authentication="principal.authorities">[ROLE_ADMIN]</span></p>
+    <h1>Administration: users</h1>
+    <table>
+        <tr><th>#</th><th>Username</th><th>Roles</th><th>Enabled</th></tr>
+        <tr th:each="u : ${users}">
+            <td th:text="${u.id}">1</td>
+            <td th:text="${u.username}">user</td>
+            <td th:text="${#strings.setJoin(u.roles, ', ')}">USER</td>
+            <td th:text="${u.enabled}">true</td>
+        </tr>
+    </table>
+    <p><a th:href="@{/books}">Catalogue</a></p>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Log out</button>
+    </form>
+</body>
+</html>
