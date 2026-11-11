@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### lab 10: local H2 database files ###
+data/

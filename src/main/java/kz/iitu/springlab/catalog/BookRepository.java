@@ -1,49 +1,58 @@
 package kz.iitu.springlab.catalog;
 
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.util.Comparator;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
+// Books now live in the "book" table (Flyway V1/V2) instead of a HashMap.
 @Repository
 public class BookRepository {
 
-    private final Map<Long, Book> storage = new ConcurrentHashMap<>();
-    private final AtomicLong sequence = new AtomicLong();
+    private static final String SELECT = "select id, title, author, published_year from book";
 
-    public BookRepository() {
-        // три стартовые записи
-        save(new Book(null, "Effective Java", "Joshua Bloch", 2018));
-        save(new Book(null, "Clean Code", "Robert Martin", 2008));
-        save(new Book(null, "Spring in Action", "Craig Walls", 2022));
+    private final JdbcClient jdbc;
+
+    public BookRepository(JdbcClient jdbc) {
+        this.jdbc = jdbc;
     }
 
     public List<Book> findAll() {
-        return storage.values().stream()
-                .sorted(Comparator.comparing(Book::id))
-                .toList();
+        return jdbc.sql(SELECT + " order by id").query(this::map).list();
     }
 
     public Optional<Book> findById(long id) {
-        return Optional.ofNullable(storage.get(id));
+        return jdbc.sql(SELECT + " where id = ?").param(id).query(this::map).optional();
     }
 
     public boolean existsById(long id) {
-        return storage.containsKey(id);
+        return findById(id).isPresent();
     }
 
     public Book save(Book book) {
-        long id = book.id() != null ? book.id() : sequence.incrementAndGet();
-        Book stored = new Book(id, book.title(), book.author(), book.year());
-        storage.put(id, stored);
-        return stored;
+        if (book.id() != null) {
+            jdbc.sql("update book set title = ?, author = ?, published_year = ? where id = ?")
+                    .params(book.title(), book.author(), book.year(), book.id())
+                    .update();
+            return book;
+        }
+        var keys = new GeneratedKeyHolder();
+        jdbc.sql("insert into book (title, author, published_year) values (?, ?, ?)")
+                .params(book.title(), book.author(), book.year())
+                .update(keys, "id");
+        return new Book(keys.getKey().longValue(), book.title(), book.author(), book.year());
     }
 
     public boolean deleteById(long id) {
-        return storage.remove(id) != null;
+        return jdbc.sql("delete from book where id = ?").param(id).update() > 0;
+    }
+
+    private Book map(ResultSet rs, int row) throws SQLException {
+        return new Book(rs.getLong("id"), rs.getString("title"),
+                rs.getString("author"), rs.getInt("published_year"));
     }
 }
